@@ -42,7 +42,7 @@ function Login() {
               required
             ></input>
           </div>
-          <button onClick={LoginUser}>Register</button>
+          <button onClick={LoginUser}>Login</button>
         </form>
         Need to register for an account? <Link to="/">Sign up here</Link>
       </div>

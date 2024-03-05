@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -25,12 +26,13 @@ namespace Application.BookClubs
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-        private readonly DataContext _context;
-        private readonly IUserAccessor _userAccessor;
+            private readonly DataContext _context;
+            private readonly IUserAccessor _userAccessor;
+
             public Handler(DataContext context, IUserAccessor userAccessor)
             {
-            _userAccessor = userAccessor;
-            _context = context;
+                _userAccessor = userAccessor;
+                _context = context;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -48,9 +50,9 @@ namespace Application.BookClubs
 
                 _context.BookClubs.Add(request.BookClub);
 
-                var result = await _context.SaveChangesAsync() > 0;
+                var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
-                if (!result) return Result<Unit>.Failure("Failred to create book club");
+                if (!result) return Result<Unit>.Failure("Failed to create book club");
 
                 return Result<Unit>.Success(Unit.Value);
             }
